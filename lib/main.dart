@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:progect_2/db/model/data_model.dart';
+import 'package:progect_2/provider/provider_student.dart';
 import 'package:progect_2/screen/homescreen.dart';
+import 'package:provider/provider.dart';
 //import 'package:progect_2/screen/student_add_screen.dart';
 
 Future<void> main() async {
@@ -18,9 +20,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: homescreen(),
+    return ChangeNotifierProvider(
+      create: (context) => ProviderStudent(),
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: homescreen(),
+      ),
     );
   }
 }

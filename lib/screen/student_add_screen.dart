@@ -1,6 +1,5 @@
 // ignore_for_file: unnecessary_import
 
-
 import 'dart:developer';
 import 'dart:io';
 
@@ -8,8 +7,11 @@ import 'package:flutter/material.dart';
 
 import 'package:progect_2/db/fuctions/db_fuctions.dart';
 import 'package:progect_2/db/model/data_model.dart';
+import 'package:progect_2/provider/provider_student.dart';
 import 'package:progect_2/screen/homescreen.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+
 class studentadd extends StatefulWidget {
   studentadd({super.key});
 
@@ -17,33 +19,31 @@ class studentadd extends StatefulWidget {
   final _numberController = TextEditingController();
   final _educationController = TextEditingController();
   final _placeController = TextEditingController();
-  final _formkey =GlobalKey<FormState>();
-
-  
+  final _formkey = GlobalKey<FormState>();
 
   @override
   State<studentadd> createState() => _studentaddState();
 }
 
-
 class _studentaddState extends State<studentadd> {
   File? image;
- 
-  Future gallery()async{
-    final image =await ImagePicker().pickImage(source: ImageSource.gallery);
-    if(image == null)return;
-    final imageTemporary=File(image.path);
-    setState(()=>this.image=imageTemporary);
 
-  
+  Future gallery() async {
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image == null) return;
+    final imageTemporary = File(image.path);
+    setState(() => this.image = imageTemporary);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset:false,
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: const Text("ADD STUDENTS", 
-          style: TextStyle(color: Colors.black),),
+          title: const Text(
+            "ADD STUDENTS",
+            style: TextStyle(color: Colors.black),
+          ),
           centerTitle: true,
           backgroundColor: Colors.grey,
           leading: IconButton(
@@ -59,29 +59,28 @@ class _studentaddState extends State<studentadd> {
           padding: const EdgeInsets.all(10.0),
           child: Form(
             key: widget._formkey,
-            child: Column(
-              children:[
-            
-                CircleAvatar(
-               backgroundImage:image == null
-               ? AssetImage('images/benz3.jpg')
-               : FileImage(File(image!.path)) as ImageProvider,
+            child: Column(children: [
+              CircleAvatar(
+                backgroundImage: image == null
+                    ? const AssetImage('images/benz3.jpg')
+                    : FileImage(File(image!.path)) as ImageProvider,
                 radius: 70,
               ),
-              
-             
-              SizedBox(height: 10,),
-              ElevatedButton(onPressed: ()=>gallery(), child: Column(
-                children: [
-                  Icon(
-                    Icons.camera_alt_sharp,
-                    size: 24.0,
-                    color: Colors.black,
-
-                  ),
-                  Text('Upload Image'),
-                ],
-              )),
+              const SizedBox(
+                height: 10,
+              ),
+              ElevatedButton(
+                  onPressed: () => gallery(),
+                  child: const Column(
+                    children: [
+                      Icon(
+                        Icons.camera_alt_sharp,
+                        size: 24.0,
+                        color: Colors.black,
+                      ),
+                      Text('Upload Image'),
+                    ],
+                  )),
               Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: TextFormField(
@@ -102,11 +101,11 @@ class _studentaddState extends State<studentadd> {
                         "Student name ",
                         style: TextStyle(color: Colors.black),
                       ),
-                      prefixIcon: Icon(Icons.person)),
+                      prefixIcon: const Icon(Icons.person)),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(15.0),
+                padding: const EdgeInsets.all(15.0),
                 child: TextFormField(
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -123,7 +122,7 @@ class _studentaddState extends State<studentadd> {
                           .secondaryHeaderColor
                           .withOpacity(0.3),
                       filled: true,
-                      prefixIcon: Icon(Icons.phone),
+                      prefixIcon: const Icon(Icons.phone),
                       label: const Text("Phone Number ",
                           style: TextStyle(color: Colors.black)),
                     )),
@@ -144,13 +143,13 @@ class _studentaddState extends State<studentadd> {
                           .secondaryHeaderColor
                           .withOpacity(0.3),
                       filled: true,
-                      prefixIcon: Icon(Icons.school),
+                      prefixIcon: const Icon(Icons.school),
                       label: const Text("Education",
                           style: TextStyle(color: Colors.black)),
                     )),
               ),
               Padding(
-                padding: EdgeInsets.all(15.0),
+                padding: const EdgeInsets.all(15.0),
                 child: TextFormField(
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -194,21 +193,27 @@ class _studentaddState extends State<studentadd> {
     final place = widget._placeController.text.trim();
     final img = image!.path;
     log(name);
-    if (name.isEmpty ||
-        number.isEmpty ||
-        education.isEmpty ||
-        place.isEmpty) {
+    if (name.isEmpty || number.isEmpty || education.isEmpty || place.isEmpty) {
       return;
     }
-    print('$name $number $education $place');
+    // print('$name $number $education $place');
 
     final _student = Studentmodel(
-        name: name, place: place, number: number, education: education, img: img);
+        name: name,
+        place: place,
+        number: number,
+        education: education,
+        img: img);
     addStudent(_student);
+
+
+
+
+    await Provider.of<ProviderStudent>(context, listen: false)
+        .addStudent(_student);
+
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
       return const homescreen();
-    }
-    )
-    );
+    }));
   }
 }

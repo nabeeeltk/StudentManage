@@ -6,7 +6,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:progect_2/db/model/data_model.dart';
+import 'package:progect_2/provider/provider_student.dart';
 import 'package:progect_2/screen/homescreen.dart';
+import 'package:provider/provider.dart';
 import '../db/fuctions/db_fuctions.dart';
 import 'homescreen.dart';
 
@@ -28,7 +30,7 @@ Studentmodel model;
   State<updateScreen> createState() => _updateScreenState();
 }
 
-class _updateScreenState extends State<updateScreen> {
+class  _updateScreenState extends State<updateScreen> {
   @override
   void initState() {
     widget._name.text = widget.model.name;
@@ -64,7 +66,7 @@ class _updateScreenState extends State<updateScreen> {
           borderRadius: BorderRadius.circular(30),
         ),
         backgroundColor: Colors.amber,
-        title: Center(
+        title: const Center(
           child: Text(
             ' Edit student',
             style: TextStyle(color: Colors.black),
@@ -75,7 +77,7 @@ class _updateScreenState extends State<updateScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
+         const  SizedBox(
             height: 10,
           ),
           Center(
@@ -86,15 +88,15 @@ class _updateScreenState extends State<updateScreen> {
               radius: 70,
             ),
           ),
-          SizedBox(
+        const   SizedBox(
             height: 10,
           ),
           Center(
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.amber, minimumSize: Size(150, 50)),
-              child: Column(
-                children: const [
+                  backgroundColor: Colors.amber, minimumSize:const  Size(150, 50)),
+              child:const  Column(
+                children:  [
                   Icon(
                     Icons.camera_alt_sharp,
                     size: 24.0,
@@ -117,13 +119,13 @@ class _updateScreenState extends State<updateScreen> {
                         height: 200,
                         child: Column(
                           children: [
-                            SizedBox(height: 10),
+                         const    SizedBox(height: 10),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.amber,
-                                  minimumSize: Size(200, 50)),
-                              child: Column(
-                                children: const [
+                                  minimumSize: const Size(200, 50)),
+                              child:const  Column(
+                                children:  [
                                   Icon(
                                     Icons.camera,
                                     color: Colors.black,
@@ -137,15 +139,15 @@ class _updateScreenState extends State<updateScreen> {
                               ),
                               onPressed: () => pickImage(),
                             ),
-                            SizedBox(
+                           const  SizedBox(
                               height: 10,
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.amber,
-                                  minimumSize: Size(200, 50)),
-                              child: Column(
-                                children: const [
+                                  minimumSize: const Size(200, 50)),
+                              child:const  Column(
+                                children:  [
                                   Icon(
                                     Icons.photo,
                                     size: 24.0,
@@ -159,13 +161,13 @@ class _updateScreenState extends State<updateScreen> {
                               ),
                               onPressed: () => gallery(),
                             ),
-                            SizedBox(height: 10),
+                          const  SizedBox(height: 10),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.red,
-                                  minimumSize: Size(200, 50)),
-                              child: Column(
-                                children: const [
+                                  minimumSize:const  Size(200, 50)),
+                              child: const Column(
+                                children: [
                                   Icon(
                                     Icons.cancel,
                                     size: 24.0,
@@ -184,7 +186,7 @@ class _updateScreenState extends State<updateScreen> {
               },
             ),
           ),
-          SizedBox(
+         const  SizedBox(
             height: 10,
           ),
           Form(
@@ -211,7 +213,7 @@ class _updateScreenState extends State<updateScreen> {
                     },
                   ),
                 ),
-                SizedBox(
+             const    SizedBox(
                   height: 10,
                 ),
                 Padding(
@@ -236,7 +238,7 @@ class _updateScreenState extends State<updateScreen> {
                     },
                   ),
                 ),
-                SizedBox(
+              const   SizedBox(
                   height: 10,
                 ),
                 Padding(
@@ -262,7 +264,7 @@ class _updateScreenState extends State<updateScreen> {
                     },
                   ),
                 ),
-                SizedBox(
+              const   SizedBox(
                   height: 10,
                 ),
                 Padding(
@@ -287,7 +289,7 @@ class _updateScreenState extends State<updateScreen> {
                     },
                   ),
                 ),
-                SizedBox(
+              const   SizedBox(
                   height: 10,
                 ),
                 Padding(
@@ -301,9 +303,9 @@ class _updateScreenState extends State<updateScreen> {
                       log(widget._name.text);
                       addClick(context);
                     },
-                    child: Row(
+                    child: const Row(
                       mainAxisSize: MainAxisSize.min,
-                      children: const [
+                      children: [
                         Text(
                           'Update',
                           style: TextStyle(color: Colors.black),
@@ -341,7 +343,11 @@ class _updateScreenState extends State<updateScreen> {
           place: place,
           img: image == null ? widget.model.img : image!.path);
 
-      await update(student);
+       update(student);
+
+       await Provider.of<ProviderStudent>(context, listen: false)
+          .update(student);
+
 
       ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(
         content: Text('data updated successfully...'),

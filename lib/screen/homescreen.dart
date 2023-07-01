@@ -1,7 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:progect_2/db/fuctions/db_fuctions.dart';
 import 'package:progect_2/db/model/data_model.dart';
+import 'package:progect_2/provider/provider_student.dart';
 import 'package:progect_2/screen/student_add_screen.dart';
+import 'package:provider/provider.dart';
 
 // ignore: camel_case_types
 class homescreen extends StatefulWidget {
@@ -27,41 +31,47 @@ class _homescreenState extends State<homescreen> {
         titleTextStyle: const TextStyle(color: Colors.white),
         backgroundColor: Colors.black,
         actions: <Widget>[
-          InkWell(
-            onTap: () {
-              setState(() {
-                if (customIcon.icon == Icons.search) {
-                  customIcon = const Icon(Icons.cancel);
-                  customSearchBar = TextField(
-                    onChanged: (value) {},
-                    textInputAction: TextInputAction.go,
-                    decoration: InputDecoration(
-                      contentPadding:
-                        const   EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
+          Consumer<ProviderStudent>(
+            builder: (context, value, child){
+            return InkWell(
+              onTap: () {
+                setState(() {
+                  if (customIcon.icon == Icons.search) {
+                    customIcon = const Icon(Icons.cancel);
+                    customSearchBar = TextField(
+                      onChanged: (value) {},
+                      textInputAction: TextInputAction.go,
+                      decoration: InputDecoration(
+                        contentPadding:
+                          const   EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        hintText: 'Search',
                       ),
-                      hintText: 'Search',
-                    ),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
-                  );
-                } else {
-                  customIcon = Icon(Icons.search);
-                  customSearchBar = const Text("STUDENTS RECORD");
-                }
-              });
-            },
-            child: SizedBox(
-              width: 100,
-              child: customIcon,
-            ),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                      ),
+                    );
+                  } else {
+                    customIcon = const Icon(Icons.search);
+                    customSearchBar = const Text("STUDENTS RECORD");
+                  }
+                });
+              },
+              child: SizedBox(
+                width: 100,
+                child: customIcon,
+              ),
+            );
+            }
           ),
         ],
         elevation: 12,
+  
       ),
+  
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         backgroundColor: Colors.black,
@@ -90,16 +100,30 @@ class _homescreenState extends State<homescreen> {
                     trailing: IconButton(
                       onPressed: () {
                         if (data.id != null) {
-                          deletstudent(data.id!);
+                          deletestudent(data.id!);
                         } else {
                           print("student id is null ");
                         }
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return const AlertDialog(
-                                title: Text("delete? "),
-                                content: Text("are you sure "),
+                              return  AlertDialog(
+                                title: const Text("delete? "),
+                                content: const Text("are you sure "),
+                                actions: [
+                                  TextButton(
+                                  child:const  Text("Cancel"),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                             } ),
+                             TextButton(
+                                  child:const  Text("ok"),
+                                  onPressed: () {
+                                         
+                                    Navigator.of(context).pop();
+                             } ),
+                             
+                              ],
                               );
                             });
                       },
@@ -108,7 +132,11 @@ class _homescreenState extends State<homescreen> {
                   );
                 },
                 separatorBuilder: (ctx, index) {
-                  return const Divider();
+                  return const Divider(
+                    color: Colors.black ,
+                    thickness: 1.5
+
+                  );
                 },
                 itemCount: studenlist.length);
           }),
